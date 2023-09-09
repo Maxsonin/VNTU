@@ -1,20 +1,53 @@
-// Lab_1_87.cpp : This file contains the 'main' function. Program execution begins and ends there.
-//
-
 #include <iostream>
+
+int AskUserForChoise();
+void DegreesToRadiansFunc();
+void RadiansToDegreesFunc();
+
+const double PI = 3.141592653589793238462643383279502884197;
 
 int main()
 {
-    std::cout << "Hello World!\n";
+    AskUserForChoise() == 1 ? DegreesToRadiansFunc() : RadiansToDegreesFunc();
+    return 0;
 }
 
-// Run program: Ctrl + F5 or Debug > Start Without Debugging menu
-// Debug program: F5 or Debug > Start Debugging menu
+int AskUserForChoise()
+{
+    std::cout << "Choose Type of Conversion:\n"
+        << "From Degrees to Radians(press '1')\n"
+        << "From Radians to Degrees(press '2')\n";
 
-// Tips for Getting Started: 
-//   1. Use the Solution Explorer window to add/manage files
-//   2. Use the Team Explorer window to connect to source control
-//   3. Use the Output window to see build output and other messages
-//   4. Use the Error List window to view errors
-//   5. Go to Project > Add New Item to create new code files, or Project > Add Existing Item to add existing code files to the project
-//   6. In the future, to open this project again, go to File > Open > Project and select the .sln file
+    int userChoice;
+    std::cin >> userChoice;
+
+    if (userChoice != 1 && userChoice != 2)
+    {
+        std::cout << "Invalid Value! Type '1' or '2'\n\n";
+        userChoice = 0;
+        AskUserForChoise();
+    }
+    else
+    {
+        return userChoice;
+    }
+}
+
+void DegreesToRadiansFunc()
+{
+    std::cout << "Type Degrees: ";
+    double DegreesVal;
+    std::cin >> DegreesVal;
+
+    std::cout << DegreesVal << " Degrees equals " << DegreesVal * PI / 180 << " Radians\n";
+}
+
+
+void RadiansToDegreesFunc()
+{
+    std::cout << "Type Radians: ";
+    double RadiansVal;
+    std::cin >> RadiansVal;
+
+    std::cout << RadiansVal << " Radians equals " << RadiansVal * 180 / PI << " Degrees\n";
+}
