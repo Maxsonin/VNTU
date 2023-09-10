@@ -1,4 +1,5 @@
 ﻿// Завдання 87. Передбачити введення кута а в градусах i переклад його в радiани
+
 #define _USE_MATH_DEFINES // Додає макрос M_PI щоб використовувати Pi
 #include <iostream> // cout/cin
 #include <cmath> // Додаємо макрови _USE_MATH_DEFINES
