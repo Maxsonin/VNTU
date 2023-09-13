@@ -2,7 +2,7 @@
 
 #define _USE_MATH_DEFINES // Додає макрос M_PI щоб використовувати Pi
 #include <iostream> // cout/cin
-#include <cmath> // Додаємо макрови _USE_MATH_DEFINES
+#include <cmath> // Додаємо макроcи _USE_MATH_DEFINES
 
 int AskUserForChoise(); // Попереднє оголошення функцiй
 void DegreesToRadiansFunc();
