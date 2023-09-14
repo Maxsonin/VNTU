@@ -43,9 +43,10 @@ std::string AskAndChackIsDigit()
 		{
 			std::cout << "Type String WITHOUT Numbers\n";
 			s.clear();
-			return AskAndChackIsDigit(); /*Рекурсивно викликаємо функцію
-										   AskAndChackIsDigit до того моменту
-										   поки користувач не введе string без чисел*/
+			return AskAndChackIsDigit();
+			/*Рекурсивно викликаємо функцію
+			AskAndChackIsDigit до того моменту
+			поки користувач не введе string без чисел*/
 		}
 	}
 	return s;
