@@ -56,7 +56,7 @@ void ShowSmallest(int arr[], int size, int smallestNum)
     for (int i = 0; i < size; i++)
     {
         if (arr[i] == smallestNum)
-            std::cout << i << ' ';
+            std::cout << i + 1 << ' ';
     }
 
     std::cout << std::endl;

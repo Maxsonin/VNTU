@@ -1,4 +1,7 @@
-﻿#include <iostream>
+﻿/*Варіант 63. Написати і протестувати функцію, що визначає,
+чи розташовуються букви в заданому символьному рядку за абеткою.*/
+
+#include <iostream>
 #include <string>
 
 bool IsAlphabetic(std::string string);
@@ -44,7 +47,7 @@ std::string AskAndChackIsDigit()
 			std::cout << "Type String WITHOUT Numbers\n";
 			s.clear();
 			return AskAndChackIsDigit();
-			/*Рекурсивно викликаємо функцію
+			/* Викликаємо функцію
 			AskAndChackIsDigit до того моменту
 			поки користувач не введе string без чисел*/
 		}
