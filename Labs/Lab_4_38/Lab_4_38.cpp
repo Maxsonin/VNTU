@@ -11,8 +11,6 @@ void ShowSmallest(int arr[], int size, int smallestNum); // Функція дл�
 
 int main()
 {
-    srand(static_cast<unsigned int>(time(nullptr))); // ініціалізує генератор випадкових чисел 
-
     std::cout << "Enter the size of the array: ";
     int size;
     std::cin >> size;
@@ -29,6 +27,8 @@ int main()
 
 void InitializeAndShow(int arr[], int size)
 {
+    srand(static_cast<unsigned int>(time(nullptr))); // ініціалізує генератор випадкових чисел 
+
     for (int i = 0; i < size; i++)
     {
         arr[i] = rand() % 10 + 1; // заповнюємо масив випадковими"" числами
