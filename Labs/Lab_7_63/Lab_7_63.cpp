@@ -38,13 +38,13 @@ std::string AskAndChackIsDigit()
 {
 	std::cout << "Enter string to chack: ";
 	std::string s;
-	std::cin >> s;
+	std::getline(std::cin, s);
 			
 	for (char c : s)
 	{
-		if (std::isdigit(c))
+		if (!std::isalpha(c))
 		{
-			std::cout << "Type String WITHOUT Numbers\n";
+			std::cout << "Type String ONLY using Letters\n";
 			s.clear();
 			return AskAndChackIsDigit();
 			/* Викликаємо функцію

@@ -2,15 +2,15 @@
 шістнадцяткових цифр в еквівалентне їй ціле десяткове число.*/
 
 #include <iostream>
-#include <iomanip> // Для std::hex щоб маніпулювати формату даних
+#include <iomanip> // Для std::hexfloat щоб маніпулювати формату даних
 
 int main()
 {
-	int x;
+	float x;
 
 	// Перетворити введене число в десяткове 
-	std::cin >> std::hex >> x; // std::hax Маніпулятор який керують базою для цілочисельного виведення
-	std::cout << x << std::endl;
+	std::cin >> std::hexfloat >> x;
+	std::cout << std::fixed << std::setprecision(3) << x << std::endl;
 
 	return 0;
 }
