@@ -1,5 +1,4 @@
-VNTU
-Fundamentals of programming(FP) Labs 
+VNTU | Fundamentals of programming(FP) Labs 
 
 -UKR-
 Цей репозиторій був створений для того, щоб зберігати мої
