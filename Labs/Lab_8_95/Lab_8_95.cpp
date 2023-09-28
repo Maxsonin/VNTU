@@ -1,23 +1,23 @@
-/*Задача 95. Дані два слова. Складіть програму, що визначає
-можна чи ні з букв слова А скласти слово В.*/
+/*Р—Р°РґР°С‡Р° 95. Р”Р°РЅС– РґРІР° СЃР»РѕРІР°. РЎРєР»Р°РґС–С‚СЊ РїСЂРѕРіСЂР°РјСѓ, С‰Рѕ РІРёР·РЅР°С‡Р°С”
+РјРѕР¶РЅР° С‡Рё РЅС– Р· Р±СѓРєРІ СЃР»РѕРІР° Рђ СЃРєР»Р°СЃС‚Рё СЃР»РѕРІРѕ Р’.*/
 
 #include <iostream>
 #include <map>
 
-bool СanConstructWord(const std::string& wordA, const std::string& wordB) //Функція яка перевіряє умову
+bool Г‘anConstructWord(const std::string& wordA, const std::string& wordB) //Р¤СѓРЅРєС†С–СЏ СЏРєР° РїРµСЂРµРІС–СЂСЏС” СѓРјРѕРІСѓ
 {
     std::map<char, int> charCountA;
     std::map<char, int> charCountB;
 
-    // Заповнюємо charCountA із буквами та їх кількістю у слові A
+    // Р—Р°РїРѕРІРЅСЋС”РјРѕ charCountA С–Р· Р±СѓРєРІР°РјРё С‚Р° С—С… РєС–Р»СЊРєС–СЃС‚СЋ Сѓ СЃР»РѕРІС– A
     for (char c : wordA)
         charCountA[c]++;
 
-    // Заповнюємо charCountB із буквами та їх кількістю у слові B
+    // Р—Р°РїРѕРІРЅСЋС”РјРѕ charCountB С–Р· Р±СѓРєРІР°РјРё С‚Р° С—С… РєС–Р»СЊРєС–СЃС‚СЋ Сѓ СЃР»РѕРІС– B
     for (char c : wordB)
         charCountB[c]++;
 
-    // Перевіряємо, чи можна скласти слово B із букв слова A
+    // РџРµСЂРµРІС–СЂСЏС”РјРѕ, С‡Рё РјРѕР¶РЅР° СЃРєР»Р°СЃС‚Рё СЃР»РѕРІРѕ B С–Р· Р±СѓРєРІ СЃР»РѕРІР° A
     for (const auto& pair : charCountB)
     {
         char letter = pair.first;
@@ -40,7 +40,7 @@ int main()
     std::string wordB;
     std::cin >> wordB;
 
-    if (СanConstructWord(wordA, wordB))
+    if (Г‘anConstructWord(wordA, wordB))
         std::cout << "Yes, it's possibe!" << std::endl;
     else
         std::cout << "No, it's impossibe!" << std::endl;
