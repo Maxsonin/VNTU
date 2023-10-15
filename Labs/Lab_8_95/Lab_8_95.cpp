@@ -4,7 +4,7 @@
 #include <iostream>
 #include <map>
 
-bool ÑanConstructWord(const std::string& wordA, const std::string& wordB) //Функція яка перевіряє умову
+bool СanConstructWord(const std::string& wordA, const std::string& wordB) //Функція яка перевіряє умову
 {
     std::map<char, int> charCountA;
     std::map<char, int> charCountB;
@@ -40,7 +40,7 @@ int main()
     std::string wordB;
     std::cin >> wordB;
 
-    if (ÑanConstructWord(wordA, wordB))
+    if (СanConstructWord(wordA, wordB))
         std::cout << "Yes, it's possibe!" << std::endl;
     else
         std::cout << "No, it's impossibe!" << std::endl;
