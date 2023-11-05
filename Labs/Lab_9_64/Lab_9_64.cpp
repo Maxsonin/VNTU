@@ -28,7 +28,7 @@ int main()
 
     std::cout << std::endl;
 
-    std::vector<Student> studentList(studentNum); // Ìàñèâ ç äàíèìè ïðî ñòóäåíò³â
+    std::vector<Student> studentList(studentNum);
 
     StudentAdd(studentList, studentNum);
 
@@ -75,7 +75,7 @@ void StudentAdd(std::vector<Student>& students, int studentNum)
         std::cout << "Type student at number " << i + 1 << "\n";
 
         std::cout << "\tType Name: ";
-        std::cin.ignore();
+        std::cin >> std::ws;
         std::getline(std::cin, students[i].studentName);
 
         std::cout << "\tType Math Score: ";

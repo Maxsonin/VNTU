@@ -1,0 +1,20 @@
+1 "Stephen" "King" "It" 1986 2 1 2
+2 "Stephen" "King" "Shining" 1977 2 1 2
+3 "Stephen" "King" "Misery" 1987 2 1 1
+4 "Stephen" "King" "Pet Sematary" 1983 2 1 1
+5 "Stephen" "King" "The Green Mile" 1996 2 1 1
+6 "J.K." "Rowling" "Harry Potter and the Sorcerer's Stone" 1997 1 2 1
+7 "George R.R." "Martin" "A Game of Thrones" 1996 2 2 2
+8 "J.R.R." "Tolkien" "The Lord of the Rings" 1954 1 2 1
+9 "Harper" "Lee" "To Kill a Mockingbird" 1960 1 2 2
+10 "George" "Orwell" "1984" 1949 2 1 2
+11 "F. Scott" "Fitzgerald" "The Great Gatsby" 1925 1 1 1
+12 "Leo" "Tolstoy" "War and Peace" 1869 2 2 2
+13 "Jane" "Austen" "Pride and Prejudice" 1813 1 1 1
+14 "Mark" "Twain" "The Adventures of Huckleberry Finn" 1884 2 1 1
+15 "Gabriel" "Garcia Marquez" "One Hundred Years of Solitude" 1967 1 2 1
+16 "Ray" "Bradbury" "Fahrenheit 451" 1953 2 1 2
+17 "Agatha" "Christie" "Murder on the Orient Express" 1934 1 1 2
+18 "Ernest" "Hemingway" "The Old Man and the Sea" 1952 2 2 1
+19 "J.D." "Salinger" "The Catcher in the Rye" 1951 1 1 1
+20 "Margaret" "Atwood" "The Handmaid's Tale" 1985 2 2 2
