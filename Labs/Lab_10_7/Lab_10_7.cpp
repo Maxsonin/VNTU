@@ -1,17 +1,17 @@
-/*Задача 7. Створити файл, що містить відомості  про книги в бібліотеці. Структура запису:
-шифр книги, автор, назва, рік видання, місце розташування (номер стелажа, полку).
-Передбачити можливість коректування файлу по коду корегування, що вводиться, наприклад:
-4 – одержати інформацію про книгу із шифром XXX. 
-- Add: Але трохи покращене ;-)*/
+/*Р—Р°РґР°С‡Р° 7. РЎС‚РІРѕСЂРёС‚Рё С„Р°Р№Р», С‰Рѕ РјС–СЃС‚РёС‚СЊ РІС–РґРѕРјРѕСЃС‚С–  РїСЂРѕ РєРЅРёРіРё РІ Р±С–Р±Р»С–РѕС‚РµС†С–. РЎС‚СЂСѓРєС‚СѓСЂР° Р·Р°РїРёСЃСѓ:
+С€РёС„СЂ РєРЅРёРіРё, Р°РІС‚РѕСЂ, РЅР°Р·РІР°, СЂС–Рє РІРёРґР°РЅРЅСЏ, РјС–СЃС†Рµ СЂРѕР·С‚Р°С€СѓРІР°РЅРЅСЏ (РЅРѕРјРµСЂ СЃС‚РµР»Р°Р¶Р°, РїРѕР»РєСѓ).
+РџРµСЂРµРґР±Р°С‡РёС‚Рё РјРѕР¶Р»РёРІС–СЃС‚СЊ РєРѕСЂРµРєС‚СѓРІР°РЅРЅСЏ С„Р°Р№Р»Сѓ РїРѕ РєРѕРґСѓ РєРѕСЂРµРіСѓРІР°РЅРЅСЏ, С‰Рѕ РІРІРѕРґРёС‚СЊСЃСЏ, РЅР°РїСЂРёРєР»Р°Рґ:
+4 вЂ“ РѕРґРµСЂР¶Р°С‚Рё С–РЅС„РѕСЂРјР°С†С–СЋ РїСЂРѕ РєРЅРёРіСѓ С–Р· С€РёС„СЂРѕРј XXX. 
+- Add: РђР»Рµ С‚СЂРѕС…Рё РїРѕРєСЂР°С‰РµРЅРµ ;-)*/
 
-// Бібліотеки щоб працювати з потоками і інформацією яку вона містить
+// Р‘С–Р±Р»С–РѕС‚РµРєРё С‰РѕР± РїСЂР°С†СЋРІР°С‚Рё Р· РїРѕС‚РѕРєР°РјРё С– С–РЅС„РѕСЂРјР°С†С–С”СЋ СЏРєСѓ РІРѕРЅР° РјС–СЃС‚РёС‚СЊ
 #include <iostream>
 #include <fstream>
 #include <sstream>
 
 #include <vector>
 
-struct Book // Інофрмація про книгу
+struct Book // Р†РЅРѕС„СЂРјР°С†С–СЏ РїСЂРѕ РєРЅРёРіСѓ
 {
     int id;
     std::string firstName;
@@ -23,17 +23,17 @@ struct Book // Інофрмація про книгу
     int numberOfShelf;
 };
 
-void ParseQuotedString(std::istringstream& ss, std::string& output); // Функція щоб правильно зчитати іформацію з рядка
+void ParseQuotedString(std::istringstream& ss, std::string& output); // Р¤СѓРЅРєС†С–СЏ С‰РѕР± РїСЂР°РІРёР»СЊРЅРѕ Р·С‡РёС‚Р°С‚Рё С–С„РѕСЂРјР°С†С–СЋ Р· СЂСЏРґРєР°
 
-std::vector<Book> ReadBooksFromFile(const std::string& fileName); // Щоб зчитати інформацію з файлу
+std::vector<Book> ReadBooksFromFile(const std::string& fileName); // Р©РѕР± Р·С‡РёС‚Р°С‚Рё С–РЅС„РѕСЂРјР°С†С–СЋ Р· С„Р°Р№Р»Сѓ
 
-// Функції для додавання нової книги
+// Р¤СѓРЅРєС†С–С— РґР»СЏ РґРѕРґР°РІР°РЅРЅСЏ РЅРѕРІРѕС— РєРЅРёРіРё
 std::string CreateAndAddBook(std::vector<Book>& books);
 void AddNewBookToFile(const std::string& fileName, const std::vector<Book>& books, const std::string stringToAdd);
 
-int SeeBook(const std::vector<Book>& books); // функція для показу книги яку обрав користувач та запамятовування його вибору
+int SeeBook(const std::vector<Book>& books); // С„СѓРЅРєС†С–СЏ РґР»СЏ РїРѕРєР°Р·Сѓ РєРЅРёРіРё СЏРєСѓ РѕР±СЂР°РІ РєРѕСЂРёСЃС‚СѓРІР°С‡ С‚Р° Р·Р°РїР°РјСЏС‚РѕРІСѓРІР°РЅРЅСЏ Р№РѕРіРѕ РІРёР±РѕСЂСѓ
 
-// Функція для того щоб оновити вже існуючу книгу
+// Р¤СѓРЅРєС†С–СЏ РґР»СЏ С‚РѕРіРѕ С‰РѕР± РѕРЅРѕРІРёС‚Рё РІР¶Рµ С–СЃРЅСѓСЋС‡Сѓ РєРЅРёРіСѓ
 void UpdateBook(std::vector<Book>& books, int bookIndexToChenge);
 void UpdateBookInFile(const std::string& fileName, const std::vector<Book>& books);
 
@@ -104,7 +104,7 @@ int main()
     return 0;
 }
 
-// Реалізації функцій
+// Р РµР°Р»С–Р·Р°С†С–С— С„СѓРЅРєС†С–Р№
 void ParseQuotedString(std::istringstream& ss, std::string& output)
 {
     char c;
@@ -144,7 +144,7 @@ std::vector<Book> ReadBooksFromFile(const std::string& fileName)
 
 void AddNewBookToFile(const std::string& fileName, const std::vector<Book>& books, const std::string stringToAdd)
 {
-    std::ofstream outFile(fileName, std::ios::app); // Відкриваємо файл для додавання в кінець
+    std::ofstream outFile(fileName, std::ios::app); // Г‚ВіГ¤ГЄГ°ГЁГўГ ВєГ¬Г® ГґГ Г©Г« Г¤Г«Гї Г¤Г®Г¤Г ГўГ Г­Г­Гї Гў ГЄВіГ­ГҐГ¶Гј
 
     if (!outFile.is_open())
     {
@@ -190,7 +190,7 @@ std::string CreateAndAddBook(std::vector<Book>& books)
 
     books.push_back(newBook);
 
-    // Створимо рядок для додавання в файл
+    // Г‘ГІГўГ®Г°ГЁГ¬Г® Г°ГїГ¤Г®ГЄ Г¤Г«Гї Г¤Г®Г¤Г ГўГ Г­Г­Гї Гў ГґГ Г©Г«
     std::string stringToAdd = std::to_string(newBook.id) + " \""
         + newBook.firstName + "\" \""
         + newBook.lastName + "\" \""
