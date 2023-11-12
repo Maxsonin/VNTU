@@ -1,9 +1,0 @@
--UKR-
-Лабораторна робота 13 - це проєкт "Elements Simulation".
-Його можна знайти зайшовши на мій профіль на Git Hub(https://github.com/Maxsonin)
-та знайти його в моїх репозиторіях.
-
--ENG-
-Lab 13 is an "Elements Simulation" project.
-You can find it by visiting my Git Hub profile(https://github.com/Maxsonin)
-and find it in my repositories.
