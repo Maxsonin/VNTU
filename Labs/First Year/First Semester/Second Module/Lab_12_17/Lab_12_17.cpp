@@ -70,31 +70,22 @@ public:
 	}
 };
 
-float windowX = 960; float windowY = 960;
-
 int WinMain()
 {
+	unsigned int windowX = 960; unsigned int windowY = 960;
 	sf::RenderWindow window(sf::VideoMode(windowX, windowY), "Lab_12_17", sf::Style::Close);
 
-	sf::Texture propsText;
-	propsText.loadFromFile("Resources/props.png");
-
-	sf::Texture plantsTexture;
-	plantsTexture.loadFromFile("Resources/plants.png");
-	plantsTexture.loadFromFile("Resources/plants.png");
-
-	Map gameMap;
+	Map map;
 
 	Sorceress sorceress;
 
-	Props elementsPlate(propsText, sf::IntRect(350, 265, 98, 80), 2.0f, sf::Vector2f(140, 680), sf::Vector2f(0, 0), 0, 0); // Elements Plate
-	Props AngelStatue(propsText, sf::IntRect(443, 19, 41, 76), 2.5f, sf::Vector2f(190, 80), sf::Vector2f(100, 63), 0, -70); // Angel Statue
-	Props BigBigTree(plantsTexture, sf::IntRect(20, 10, 117, 143), 2.7f, sf::Vector2f(330, -30), sf::Vector2f(25, 40), 150, -40); // Big Big Tree
-	Props MediumTree(plantsTexture, sf::IntRect(160, 16, 100, 140), 2.0f, sf::Vector2f(380, 490), sf::Vector2f(25, 40), 82, -43); // Medium Tree
-	Props BigTree(plantsTexture, sf::IntRect(20, 10, 117, 143), 2.5f, sf::Vector2f(450, 550), sf::Vector2f(25, 40), 135, -40); // Big Tree
-	Props Bush(plantsTexture, sf::IntRect(210, 175, 50, 50), 2.0f, sf::Vector2f(470, 270), sf::Vector2f(90, 30), 12, -30); // Bush
+	sf::Texture propsTexture;
+	propsTexture.loadFromFile("Resources/props.png");
 
+	sf::Texture plantsTexture;
+	plantsTexture.loadFromFile("Resources/plants.png");
 
+	std::vector<Props> propsList = Props::CreatePropsList(propsTexture, plantsTexture);
 
 	while (window.isOpen())
 	{
@@ -104,42 +95,14 @@ int WinMain()
 			if (event.type == sf::Event::Closed)
 				window.close();
 
-		gameMap.DrawTileMap(window);
-		elementsPlate.Draw(window);
+		map.DrawTileMap(window);
 
-		AngelStatue.Draw(window);
-		BigBigTree.Draw(window);
-		MediumTree.Draw(window);
-		BigTree.Draw(window);
-		Bush.Draw(window);
+		Props::DrawProps(window, propsList);
 
-		sorceress.UpdateCollision(AngelStatue);
-		sorceress.UpdateCollision(BigBigTree);
-		sorceress.UpdateCollision(MediumTree);
-		sorceress.UpdateCollision(BigTree);
-		sorceress.UpdateCollision(Bush);
+		sorceress.DrawSorceress(window, propsList);
 
-		sorceress.DrawSorceress(window);
-		if (AngelStatue.GetPlateBounds().top > sorceress.GetPlateBounds().top)
-		{
-			AngelStatue.Draw(window);
-		}
-		if (BigBigTree.GetPlateBounds().top > sorceress.GetPlateBounds().top)
-		{
-			BigBigTree.Draw(window);
-		}
-		if (MediumTree.GetPlateBounds().top > sorceress.GetPlateBounds().top)
-		{
-			MediumTree.Draw(window);
-		}
-		if (BigTree.GetPlateBounds().top > sorceress.GetPlateBounds().top)
-		{
-			BigTree.Draw(window);
-		}
-		if (Bush.GetPlateBounds().top > sorceress.GetPlateBounds().top)
-		{
-			Bush.Draw(window);
-		}
+		sorceress.UpdateDrawPriority(window, propsList);
+
 		window.display();
 	}
 

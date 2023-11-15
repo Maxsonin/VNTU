@@ -134,7 +134,6 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Lab_12_17.cpp" />
-    <ClCompile Include="Props.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Props.h" />

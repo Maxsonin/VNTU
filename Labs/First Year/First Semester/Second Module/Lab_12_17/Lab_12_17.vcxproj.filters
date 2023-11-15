@@ -18,9 +18,6 @@
     <ClCompile Include="Lab_12_17.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Props.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Sorceress.h">

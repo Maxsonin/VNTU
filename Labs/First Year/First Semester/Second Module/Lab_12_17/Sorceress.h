@@ -7,13 +7,13 @@
 class Sorceress
 {
 private:
-	sf::Texture bodyText;
+	sf::Texture bodyTexture;
 	sf::Sprite sprite;
 
-	// Fields to work with directions, size and animations
+	// Fields to work with direction, size and animations
 	float movelen = 0.15f;
 	float cFrame = 0;
-	bool direction = true;
+	bool direction = true; // True - right
 	float currentSize = 2.0f;
 
 	// Collision rectang
@@ -24,21 +24,18 @@ public:
 	Sorceress()
 	{
 		// Giving some form to the Sorceress object
-		bodyText.loadFromFile("Resources/animation.png");
-		sprite.setTexture(bodyText);
-		sprite.setTextureRect(sf::IntRect(0, 0, 65, 65));
-		sprite.setPosition(100, 420);
+		bodyTexture.loadFromFile("Resources/animation.png");
+		sprite.setTexture(bodyTexture);
+		sprite.setTextureRect(sf::IntRect(0, 0, 64, 64));
+		sprite.setPosition(100, 420); // Set spawn position
 		sprite.setScale(currentSize, currentSize);
 		sprite.setOrigin(sprite.getLocalBounds().width / 2, sprite.getLocalBounds().height / 2);
 
 		plate.setSize(sf::Vector2f(70, 35)); // Rectangle that will halp us handle Collision
-		plate.setFillColor(sf::Color(255, 0, 0, 0)); // To see hitboxs(Rectangle)
+		plate.setFillColor(sf::Color(255, 0, 0, 70)); // To see hitboxs(Rectangle)
 	}
 
-	sf::FloatRect GetPlateBounds() const
-	{
-		return plate.getGlobalBounds();
-	}
+	sf::FloatRect GetPlateBounds() const { return plate.getGlobalBounds(); }
 
 	void UpdatePlatePosition()
 	{
@@ -54,12 +51,15 @@ public:
 			plate.setOrigin(plate.getLocalBounds().width / 2 + 20, plate.getLocalBounds().height / 2);
 	}
 
-	void DrawSorceress(sf::RenderWindow& window)
+	void DrawSorceress(sf::RenderWindow& window, const std::vector<Props>& propsList)
 	{
+		// Handle Changes
 		Animation();
 		Movement();
 		UpdatePlatePosition();
+		UpdateWithCollision(propsList);
 
+		// and than draw tham
 		window.draw(sprite);
 		window.draw(plate);
 	}
@@ -138,68 +138,83 @@ public:
 		return sorceressBounds.intersects(propsPlateBounds);
 	}
 
-	void UpdateCollision(const Props& props)
+	void UpdateWithCollision(const std::vector<Props>& propsList)
 	{
-		sf::FloatRect sorceressBounds = plate.getGlobalBounds();
-		sf::FloatRect propsPlateBounds = props.GetPlateBounds();
-
-		// Перевірте чи існує зіткнення по X
-		bool collisionX = sorceressBounds.left < propsPlateBounds.left + propsPlateBounds.width &&
-			sorceressBounds.left + sorceressBounds.width > propsPlateBounds.left;
-
-		// Перевірте чи існує зіткнення по Y
-		bool collisionY = sorceressBounds.top < propsPlateBounds.top + propsPlateBounds.height &&
-			sorceressBounds.top + sorceressBounds.height > propsPlateBounds.top;
-
-		if (collisionX && collisionY)
+		for (auto& props : propsList)
 		{
-			// Зіткнення відбулося - визначте сторону
+			sf::FloatRect sorceressBounds = plate.getGlobalBounds();
+			sf::FloatRect propsPlateBounds = props.GetPlateBounds();
 
-			if (sorceressBounds.top < propsPlateBounds.top)
-			{
-				isAboveProps = true;
-			}
-			else
-			{
-				isAboveProps = false;
-			}
+			// Перевірте чи існує зіткнення по X
+			bool collisionX = sorceressBounds.left < propsPlateBounds.left + propsPlateBounds.width &&
+				sorceressBounds.left + sorceressBounds.width > propsPlateBounds.left;
 
-			// Перевірка сторони по Y
-			if (sorceressBounds.top < propsPlateBounds.top && (sorceressBounds.left + sorceressBounds.width >= propsPlateBounds.left || sorceressBounds.left <= propsPlateBounds.left + propsPlateBounds.width))
-			{
-				// Зіткнення зверху
+			// Перевірте чи існує зіткнення по Y
+			bool collisionY = sorceressBounds.top < propsPlateBounds.top + propsPlateBounds.height &&
+				sorceressBounds.top + sorceressBounds.height > propsPlateBounds.top;
 
-				if (direction)
+			if (collisionX && collisionY)
+			{
+				// Зіткнення відбулося - визначте сторону
+
+				if (sorceressBounds.top < propsPlateBounds.top)
 				{
-					sprite.setPosition(sorceressBounds.left + 15, propsPlateBounds.top - sorceressBounds.height + 2.5);
+					isAboveProps = true;
 				}
 				else
 				{
-					sprite.setPosition(sorceressBounds.left + sorceressBounds.width - 15, propsPlateBounds.top - sorceressBounds.height + 2.5);
+					isAboveProps = false;
 				}
-			}
-			else if (sorceressBounds.top > propsPlateBounds.top + propsPlateBounds.height - 2 && (sorceressBounds.left + sorceressBounds.width >= propsPlateBounds.left || sorceressBounds.left <= propsPlateBounds.left + propsPlateBounds.width))
-			{
-				// Зіткнення знизу
-				if (direction)
+
+				// Перевірка сторони по Y
+				if (sorceressBounds.top < propsPlateBounds.top && (sorceressBounds.left + sorceressBounds.width >= propsPlateBounds.left || sorceressBounds.left <= propsPlateBounds.left + propsPlateBounds.width))
 				{
-					sprite.setPosition(sorceressBounds.left + 15, propsPlateBounds.top + propsPlateBounds.height + 2.5);
+					// Зіткнення зверху
+
+					if (direction)
+					{
+						sprite.setPosition(sorceressBounds.left + 15, propsPlateBounds.top - sorceressBounds.height + 2.5);
+					}
+					else
+					{
+						sprite.setPosition(sorceressBounds.left + sorceressBounds.width - 15, propsPlateBounds.top - sorceressBounds.height + 2.5);
+					}
 				}
-				else
+				else if (sorceressBounds.top > propsPlateBounds.top + propsPlateBounds.height - 2 && (sorceressBounds.left + sorceressBounds.width >= propsPlateBounds.left || sorceressBounds.left <= propsPlateBounds.left + propsPlateBounds.width))
 				{
-					sprite.setPosition(sorceressBounds.left + sorceressBounds.width - 15, propsPlateBounds.top + propsPlateBounds.height + 2.5);
+					// Зіткнення знизу
+					if (direction)
+					{
+						sprite.setPosition(sorceressBounds.left + 15, propsPlateBounds.top + propsPlateBounds.height + 2.5);
+					}
+					else
+					{
+						sprite.setPosition(sorceressBounds.left + sorceressBounds.width - 15, propsPlateBounds.top + propsPlateBounds.height + 2.5);
+					}
+				}
+				// Перевірка сторони по X
+				else if (sorceressBounds.left < propsPlateBounds.left)
+				{
+					// Зіткнення зліва
+					sprite.setPosition(propsPlateBounds.left - sorceressBounds.width + 15, sorceressBounds.top + 2.5);
+				}
+				else if (sorceressBounds.left > propsPlateBounds.left)
+				{
+					// Зіткнення справа
+					sprite.setPosition(propsPlateBounds.left + propsPlateBounds.width + sorceressBounds.width - 15, sorceressBounds.top + 2.5);
 				}
 			}
-			// Перевірка сторони по X
-			else if (sorceressBounds.left < propsPlateBounds.left)
+		}
+	}
+
+	void UpdateDrawPriority(sf::RenderWindow& window, const std::vector<Props>& propsList)
+	{
+
+		for (auto& props : propsList)
+		{
+			if (props.GetPlateBounds().top > plate.getGlobalBounds().top)
 			{
-				// Зіткнення зліва
-				sprite.setPosition(propsPlateBounds.left - sorceressBounds.width + 15, sorceressBounds.top + 2.5);
-			}
-			else if (sorceressBounds.left > propsPlateBounds.left)
-			{
-				// Зіткнення справа
-				sprite.setPosition(propsPlateBounds.left + propsPlateBounds.width + sorceressBounds.width - 15, sorceressBounds.top + 2.5);
+				props.Draw(window);
 			}
 		}
 	}
