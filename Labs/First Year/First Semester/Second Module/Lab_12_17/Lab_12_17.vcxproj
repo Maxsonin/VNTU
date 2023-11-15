@@ -134,6 +134,11 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Lab_12_17.cpp" />
+    <ClCompile Include="Props.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Props.h" />
+    <ClInclude Include="Sorceress.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
