@@ -1,8 +1,10 @@
 #pragma once
 
 #include <SFML/Graphics.hpp>
+#include <SFML/Audio.hpp>
 
-#include "Props.h";
+#include "Props.h"
+#include "Wizard.h"
 
 class Sorceress
 {
@@ -10,17 +12,30 @@ private:
 	sf::Texture bodyTexture;
 	sf::Sprite sprite;
 
-	// Fields to work with direction, size and animations
+	// General settings
 	float movelen = 0.15f;
-	float cFrame = 0;
-	bool direction = true; // True - right
 	float currentSize = 2.0f;
 
-	// Collision rectang
+	// For work with animations
+	float cFrame = 0;
+	bool direction = true; // True - right
+
+	// Collision rectangle
 	sf::RectangleShape plate;
 	bool isAboveProps = false;
 
+	// For talking
+	bool hasTalked = false;
+	bool isTalking = false;
+
+	// For HP Bar
+	int HP = 100;
+	sf::Music pain;
+	bool damegeGet = false;
+
 public:
+	#pragma region Constructors
+
 	Sorceress()
 	{
 		// Giving some form to the Sorceress object
@@ -32,10 +47,91 @@ public:
 		sprite.setOrigin(sprite.getLocalBounds().width / 2, sprite.getLocalBounds().height / 2);
 
 		plate.setSize(sf::Vector2f(70, 35)); // Rectangle that will halp us handle Collision
-		plate.setFillColor(sf::Color(255, 0, 0, 70)); // To see hitboxs(Rectangle)
+		plate.setFillColor(sf::Color(255, 0, 0, 0)); // To see hitboxs(Rectangle)
+
+		pain.openFromFile("Resources/pain.mp3"); // add sound that will play whan hit
 	}
 
+	#pragma endregion 
+
+	#pragma region Geters&Setters
+
+	bool HasTalkedToWizard() const { return hasTalked; }
+
+	bool Alive() const { return (HP > 0 ? 1 : 0); }
+
+	bool DamegeGet() const { return damegeGet; }
+
+	void ChangeDamegeGet(bool newValue) { damegeGet = newValue; }
+
+	bool IsTalking() const { return isTalking; }
+
+	void ChangeIsTalking(bool newValue) { isTalking = newValue; }
+
+	void ChangeIfHasTalked(bool newValue) { hasTalked = newValue; }
+
+	int GetCurrentHP() { return HP; }
+
 	sf::FloatRect GetPlateBounds() const { return plate.getGlobalBounds(); }
+
+	#pragma endregion
+
+	#pragma region Update&DrawFunctions
+
+	void UpdateWithCollision(const std::vector<Props>& propsList)
+	{
+		for (auto& props : propsList)
+		{
+			sf::FloatRect sorceressBounds = plate.getGlobalBounds(); // Position of hitbox(sorceress)
+			sf::FloatRect propsPlateBounds = props.GetPlateBounds(); // Position of hitbox(current props)
+
+			// Finding from which direction we have colliіion
+			// Перевірте чи існує зіткнення по X
+			bool collisionX = sorceressBounds.left < propsPlateBounds.left + propsPlateBounds.width &&
+				sorceressBounds.left + sorceressBounds.width > propsPlateBounds.left;
+
+			// Перевірте чи існує зіткнення по Y
+			bool collisionY = sorceressBounds.top < propsPlateBounds.top + propsPlateBounds.height &&
+				sorceressBounds.top + sorceressBounds.height > propsPlateBounds.top;
+
+			if (collisionX && collisionY)
+			{
+				// Перевірка сторони по Y
+				if (sorceressBounds.top < propsPlateBounds.top && (sorceressBounds.left + sorceressBounds.width >= propsPlateBounds.left || sorceressBounds.left <= propsPlateBounds.left + propsPlateBounds.width))
+				{
+					// Зіткнення зверху
+					if (direction)
+						sprite.setPosition(sorceressBounds.left + 15, propsPlateBounds.top - sorceressBounds.height + 2.5);
+					else
+						sprite.setPosition(sorceressBounds.left + sorceressBounds.width - 15, propsPlateBounds.top - sorceressBounds.height + 2.5);
+				}
+				else if (sorceressBounds.top > propsPlateBounds.top + propsPlateBounds.height - 2 && (sorceressBounds.left + sorceressBounds.width >= propsPlateBounds.left || sorceressBounds.left <= propsPlateBounds.left + propsPlateBounds.width))
+				{
+					// Зіткнення знизу
+					if (direction)
+						sprite.setPosition(sorceressBounds.left + 15, propsPlateBounds.top + propsPlateBounds.height + 2.5);
+					else
+						sprite.setPosition(sorceressBounds.left + sorceressBounds.width - 15, propsPlateBounds.top + propsPlateBounds.height + 2.5);
+				}
+				// Перевірка сторони по X
+				else if (sorceressBounds.left < propsPlateBounds.left)
+					// Зіткнення зліва
+					sprite.setPosition(propsPlateBounds.left - sorceressBounds.width + 15, sorceressBounds.top + 2.5);
+				else if (sorceressBounds.left > propsPlateBounds.left)
+					// Зіткнення справа
+					sprite.setPosition(propsPlateBounds.left + propsPlateBounds.width + sorceressBounds.width - 15, sorceressBounds.top + 2.5);
+			}
+		}
+	}
+
+	void UpdateDrawPriority(sf::RenderWindow& window, const std::vector<Props>& propsList, Wizard& wizard)
+	{
+		// We will go through every Props and if we below it - draw priority will increase to Sorceress
+		for (auto& props : propsList)
+			if (props.GetPlateBounds().top > plate.getGlobalBounds().top && (!props.GetPlateSprite().getSize().x == 0)) props.Draw(window);
+
+		if (!CheckCollisionWithWizard(wizard) && wizard.GetCurrentReplicaCount() <= 8) wizard.Draw(window);
+	}
 
 	void UpdatePlatePosition()
 	{
@@ -51,25 +147,31 @@ public:
 			plate.setOrigin(plate.getLocalBounds().width / 2 + 20, plate.getLocalBounds().height / 2);
 	}
 
-	void DrawSorceress(sf::RenderWindow& window, const std::vector<Props>& propsList)
+	void DrawSorceress(sf::RenderWindow& window, const std::vector<Props>& propsList, Wizard& wizard)
 	{
 		// Handle Changes
 		Animation();
 		Movement();
 		UpdatePlatePosition();
 		UpdateWithCollision(propsList);
+		UpdateIsTalking(wizard);
 
 		// and than draw tham
 		window.draw(sprite);
 		window.draw(plate);
+		//window.draw(painEffect); // interestig to see how priority changing
 	}
 
-	sf::Sprite& GetSprite() { return sprite; }
+	void UpdateIsTalking(Wizard& wizard) {	if (wizard.GetCurrentReplicaCount() == 9) ChangeIsTalking(false); }
+
+	#pragma endregion
+
+	#pragma region Animations
 
 	void Animation()
 	{
-		cFrame += 0.0045f;
-		if (cFrame > 9) cFrame -= 9;
+		cFrame += 0.0045f; // Responsible for animation speed
+		if (cFrame > 9) cFrame -= 9; // Here we have num of diff pic in SpriteList
 
 		if (sf::Keyboard::isKeyPressed(sf::Keyboard::A))
 			direction = false;
@@ -82,10 +184,12 @@ public:
 			sprite.setTextureRect(sf::IntRect(64 * static_cast<int>(cFrame) + 64, 0, -64, 64));
 	}
 
+	#pragma endregion
+
+	#pragma region MainFunctions
+
 	void Movement()
 	{
-		// Перевірка, чи нове положення персонажа за межами вікна
-
 		if (sf::Keyboard::isKeyPressed(sf::Keyboard::D) && plate.getGlobalBounds().left + plate.getGlobalBounds().width + movelen < 960)
 		{
 			sprite.move(movelen, 0);
@@ -103,33 +207,60 @@ public:
 			sprite.move(0, movelen);
 		}
 
-		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Equal))
+		if (hasTalked && !isTalking)
 		{
-			sf::Vector2f scale = sprite.getScale();
-			if (currentSize + 0.1f <= 9.0f)
+			if (sf::Keyboard::isKeyPressed(sf::Keyboard::Equal))
 			{
-				sprite.setScale(scale.x * 1.01f, scale.y * 1.01f);
-				plate.setScale(scale.x * 0.355f, scale.y * 0.355f);
-				currentSize += 0.1f;
+				sf::Vector2f scale = sprite.getScale();
+				if (currentSize + 0.1f <= 9.0f)
+				{
+					sprite.setScale(scale.x * 1.01f, scale.y * 1.01f);
+					plate.setScale(scale.x * 0.355f, scale.y * 0.355f);
+					currentSize += 0.1f;
+				}
+			}
+			if (sf::Keyboard::isKeyPressed(sf::Keyboard::Dash))
+			{
+				sf::Vector2f scale = sprite.getScale();
+				if (currentSize - 0.1f >= -6.0f)
+				{
+					sprite.setScale(scale.x * 0.99f, scale.y * 0.99f);
+					plate.setScale(scale.x * 0.475f, scale.y * 0.475f);
+					currentSize -= 0.1f;
+				}
+			}
+			if (sf::Keyboard::isKeyPressed(sf::Keyboard::Num0))
+			{
+				currentSize = 2.0f;
+				sprite.setScale(currentSize, currentSize);
+				plate.setScale(1.0f, 1.0f);
 			}
 		}
-		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Dash))
+		SizeDamege(); // and right after we will handle damege
+	}
+
+	void GetDamage(int damage) { HP -= damage; damegeGet = true; pain.play(); }
+
+	void SizeDamege()
+	{
+		static sf::Clock damegeClock;
+		static const sf::Time damegeLimitTime = sf::seconds(3.5f); // it will set time for space between geting two damege
+
+		if (damegeClock.getElapsedTime() >= damegeLimitTime)
 		{
-			sf::Vector2f scale = sprite.getScale();
-			if (currentSize - 0.1f >= -6.0f)
+			if ((currentSize + 1.0f >= 9.0f || currentSize - 1.0f <= -6.0f) && HP > 0)
 			{
-				sprite.setScale(scale.x * 0.99f, scale.y * 0.99f);
-				plate.setScale(scale.x * 0.475f, scale.y * 0.475f);
-				currentSize -= 0.1f;
+				GetDamage(10);
+				damegeGet = true;
 			}
-		}
-		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Num0))
-		{
-			currentSize = 2.0f;
-			sprite.setScale(currentSize, currentSize);
-			plate.setScale(1.0f, 1.0f);
+
+			damegeClock.restart();
 		}
 	}
+
+	#pragma endregion
+
+	#pragma region MetodsForColision
 
 	bool CheckCollision(const Props& props) const
 	{
@@ -138,84 +269,12 @@ public:
 		return sorceressBounds.intersects(propsPlateBounds);
 	}
 
-	void UpdateWithCollision(const std::vector<Props>& propsList)
+	bool CheckCollisionWithWizard(Wizard& wizard) const
 	{
-		for (auto& props : propsList)
-		{
-			sf::FloatRect sorceressBounds = plate.getGlobalBounds();
-			sf::FloatRect propsPlateBounds = props.GetPlateBounds();
-
-			// Перевірте чи існує зіткнення по X
-			bool collisionX = sorceressBounds.left < propsPlateBounds.left + propsPlateBounds.width &&
-				sorceressBounds.left + sorceressBounds.width > propsPlateBounds.left;
-
-			// Перевірте чи існує зіткнення по Y
-			bool collisionY = sorceressBounds.top < propsPlateBounds.top + propsPlateBounds.height &&
-				sorceressBounds.top + sorceressBounds.height > propsPlateBounds.top;
-
-			if (collisionX && collisionY)
-			{
-				// Зіткнення відбулося - визначте сторону
-
-				if (sorceressBounds.top < propsPlateBounds.top)
-				{
-					isAboveProps = true;
-				}
-				else
-				{
-					isAboveProps = false;
-				}
-
-				// Перевірка сторони по Y
-				if (sorceressBounds.top < propsPlateBounds.top && (sorceressBounds.left + sorceressBounds.width >= propsPlateBounds.left || sorceressBounds.left <= propsPlateBounds.left + propsPlateBounds.width))
-				{
-					// Зіткнення зверху
-
-					if (direction)
-					{
-						sprite.setPosition(sorceressBounds.left + 15, propsPlateBounds.top - sorceressBounds.height + 2.5);
-					}
-					else
-					{
-						sprite.setPosition(sorceressBounds.left + sorceressBounds.width - 15, propsPlateBounds.top - sorceressBounds.height + 2.5);
-					}
-				}
-				else if (sorceressBounds.top > propsPlateBounds.top + propsPlateBounds.height - 2 && (sorceressBounds.left + sorceressBounds.width >= propsPlateBounds.left || sorceressBounds.left <= propsPlateBounds.left + propsPlateBounds.width))
-				{
-					// Зіткнення знизу
-					if (direction)
-					{
-						sprite.setPosition(sorceressBounds.left + 15, propsPlateBounds.top + propsPlateBounds.height + 2.5);
-					}
-					else
-					{
-						sprite.setPosition(sorceressBounds.left + sorceressBounds.width - 15, propsPlateBounds.top + propsPlateBounds.height + 2.5);
-					}
-				}
-				// Перевірка сторони по X
-				else if (sorceressBounds.left < propsPlateBounds.left)
-				{
-					// Зіткнення зліва
-					sprite.setPosition(propsPlateBounds.left - sorceressBounds.width + 15, sorceressBounds.top + 2.5);
-				}
-				else if (sorceressBounds.left > propsPlateBounds.left)
-				{
-					// Зіткнення справа
-					sprite.setPosition(propsPlateBounds.left + propsPlateBounds.width + sorceressBounds.width - 15, sorceressBounds.top + 2.5);
-				}
-			}
-		}
+		sf::FloatRect sorceressBounds = plate.getGlobalBounds();
+		sf::FloatRect propsPlateBounds = wizard.GetPlate().getGlobalBounds();
+		return sorceressBounds.intersects(propsPlateBounds);
 	}
 
-	void UpdateDrawPriority(sf::RenderWindow& window, const std::vector<Props>& propsList)
-	{
-
-		for (auto& props : propsList)
-		{
-			if (props.GetPlateBounds().top > plate.getGlobalBounds().top)
-			{
-				props.Draw(window);
-			}
-		}
-	}
+	#pragma endregion
 };

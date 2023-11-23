@@ -136,8 +136,10 @@
     <ClCompile Include="Lab_12_17.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="HUD.h" />
     <ClInclude Include="Props.h" />
     <ClInclude Include="Sorceress.h" />
+    <ClInclude Include="Wizard.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

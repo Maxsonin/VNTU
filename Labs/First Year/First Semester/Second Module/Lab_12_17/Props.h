@@ -2,68 +2,83 @@
 
 #include <SFML/Graphics.hpp>
 
-#include "Sorceress.h"
-
 class Props
 {
 private:
 	sf::Sprite sprite;
-	sf::IntRect textureRect;
 
 	// For Collision
 	sf::RectangleShape plate;
 
-public:
+	// static Textures
+	static sf::Texture propsTexture;
+	static sf::Texture plantsTexture;
 
-	Props(const sf::Texture& texture, sf::IntRect rect, float scale, sf::Vector2f position, sf::Vector2f plateSize, int positionX, int positionY)
-		: textureRect(rect)
+public:
+	#pragma region Constructors
+
+	// Problem we encounting(https://stackoverflow.com/questions/62095373/sfml-texture-not-loading-propely)
+	Props(char textureType, sf::IntRect textureRect, float scale, sf::Vector2f position, sf::Vector2f plateSize, sf::Vector2f platePosition)
 	{
-		sprite.setTexture(texture);
+		if (textureType == 'p')
+			sprite.setTexture(propsTexture);
+		else if (textureType == 't')
+			sprite.setTexture(plantsTexture);
+
 		sprite.setTextureRect(textureRect);
 		sprite.setScale(scale, scale);
 		sprite.setPosition(position);
 
 		plate.setSize(plateSize);
-		plate.setPosition(position.x + positionX, position.y + textureRect.height * scale + positionY);
-
-		plate.setFillColor(sf::Color(255, 0, 0, 0)); // To see hitboxs
+		plate.setPosition(position.x + platePosition.x, position.y + textureRect.height * scale + platePosition.y);
+		plate.setFillColor(sf::Color(255, 0, 0, 0)); // To see hitboxes
 	}
 
-	static std::vector<Props> CreatePropsList(sf::Texture& propsTexture, sf::Texture& plantsTexture)
-	{
+	#pragma endregion
 
+	#pragma region Geters&Setters
+
+	sf::RectangleShape GetPlateSprite() const { return plate; }
+	sf::FloatRect GetPlateBounds() const { return plate.getGlobalBounds(); }
+
+	#pragma endregion
+
+	#pragma region Creation
+
+	static void InitTextures()
+	{
+		propsTexture.loadFromFile("Resources/props.png");
+		plantsTexture.loadFromFile("Resources/plants.png");
+	}
+
+	static std::vector<Props> CreatePropsList()
+	{
 		std::vector<Props> propsList =
 		{
-			Props(propsTexture, sf::IntRect(350, 265, 98, 80), 2.0f, sf::Vector2f(140, 680), sf::Vector2f(0, 0), 0, 0),		   // Elements Plate
-			Props(propsTexture, sf::IntRect(443, 19, 41, 76), 2.5f, sf::Vector2f(190, 80), sf::Vector2f(100, 63), 0, -70),        // Angel Statue
-			Props(plantsTexture, sf::IntRect(20, 10, 117, 143), 2.7f, sf::Vector2f(330, -30), sf::Vector2f(25, 40), 150, -40), // Big Big Tree
-			Props(plantsTexture, sf::IntRect(160, 16, 100, 140), 2.0f, sf::Vector2f(380, 490), sf::Vector2f(25, 40), 82, -43), // Medium Tree
-			Props(plantsTexture, sf::IntRect(20, 10, 117, 143), 2.5f, sf::Vector2f(450, 550), sf::Vector2f(25, 40), 135, -40), // Big Tree
-			Props(plantsTexture, sf::IntRect(210, 175, 50, 50), 2.0f, sf::Vector2f(470, 270), sf::Vector2f(90, 30), 12, -30)   // Bush
+			// If plate size equels (0, 0) it will indicate that we wont include it in the priority function
+			Props('p', sf::IntRect(350, 265, 98, 80), 2.0f, sf::Vector2f(140, 680), sf::Vector2f(0, 0), sf::Vector2f(0, 0)),       // Elements Plate
+			Props('p', sf::IntRect(443, 19, 41, 76), 2.5f, sf::Vector2f(190, 80), sf::Vector2f(85, 30), sf::Vector2f(10, -70)),    // Angel Statue
+			Props('p', sf::IntRect(286, 15, 65, 47), 2.0f, sf::Vector2f(335, 280), sf::Vector2f(120, 55), sf::Vector2f(8, -65)),   // Banch
+			Props('t', sf::IntRect(20, 10, 117, 143), 2.7f, sf::Vector2f(330, -30), sf::Vector2f(25, 40), sf::Vector2f(150, -40)), // Big Big Tree
+			Props('t', sf::IntRect(160, 16, 100, 140), 2.0f, sf::Vector2f(380, 490), sf::Vector2f(25, 40), sf::Vector2f(80, -43)), // Medium Tree
+			Props('t', sf::IntRect(20, 10, 117, 143), 2.5f, sf::Vector2f(450, 550), sf::Vector2f(25, 40), sf::Vector2f(135, -40)), // Big Tree
+			Props('t', sf::IntRect(210, 175, 50, 50), 2.0f, sf::Vector2f(470, 263), sf::Vector2f(90, 30), sf::Vector2f(12, -30))   // Bush
 		};
 
 		return propsList;
 	}
 
-	const sf::Sprite GetSprite() const { return sprite; }
+	#pragma endregion
 
-	// To draw single prop
-	void Draw(sf::RenderWindow& window) const
-	{
-		window.draw(sprite);
-		window.draw(plate);
-	}
+	#pragma region Drawing
 
-	static void DrawProps(sf::RenderWindow& window, const std::vector<Props>& propsList)
-	{
-		for (const auto& props : propsList)
-		{
-			props.Draw(window);
-		}
-	}
+	void Draw(sf::RenderWindow& window) const { window.draw(sprite); window.draw(plate); }	// To draw single prop
 
-	sf::FloatRect GetPlateBounds() const
-	{
-		return plate.getGlobalBounds();
-	}
+	static void DrawProps(sf::RenderWindow& window, const std::vector<Props>& propsList) { for (const auto& props : propsList) props.Draw(window); }
+
+	#pragma endregion
 };
+
+// Initialize static texture members
+sf::Texture Props::propsTexture;
+sf::Texture Props::plantsTexture;

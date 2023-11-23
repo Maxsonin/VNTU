@@ -26,5 +26,11 @@
     <ClInclude Include="Props.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Wizard.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="HUD.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
