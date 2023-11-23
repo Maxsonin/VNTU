@@ -159,7 +159,6 @@ public:
 		// and than draw tham
 		window.draw(sprite);
 		window.draw(plate);
-		//window.draw(painEffect); // interestig to see how priority changing
 	}
 
 	void UpdateIsTalking(Wizard& wizard) {	if (wizard.GetCurrentReplicaCount() == 9) ChangeIsTalking(false); }
