@@ -87,7 +87,7 @@ public:
 	{
 		if (cFrameV <= 5)
 		{
-			cFrameV += 0.005f; // Responsible for animation speed
+			cFrameV += 0.0045f; // Responsible for animation speed
 			sprite.setTextureRect(sf::IntRect(32 * static_cast<int>(cFrameV) + 32, 162, -32, 32));
 
 			if (cFrameV == 5) { hasVanished = true; } // It will mean that it's end of animation
@@ -109,7 +109,7 @@ public:
 		if (replicaCount < 9)
 		{
 			static sf::Clock talkTimer;  // Static timer to save state between calls
-			static const sf::Time talkTimeLimit = sf::seconds(3.5f);  // Length of each replicas
+			const sf::Time talkTimeLimit = sf::seconds(3.5f);  // Length of each replicas
 
 			if (talkTimer.getElapsedTime() < talkTimeLimit)
 			{

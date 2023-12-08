@@ -33,6 +33,9 @@ private:
 	sf::Music pain;
 	bool damegeGet = false;
 
+	// Proority Test
+	// sf::RectangleShape test;
+
 public:
 	#pragma region Constructors
 
@@ -50,6 +53,10 @@ public:
 		plate.setFillColor(sf::Color(255, 0, 0, 0)); // To see hitboxs(Rectangle)
 
 		pain.openFromFile("Resources/pain.mp3"); // add sound that will play whan hit
+
+		// Priority Test
+		// test.setSize(sf::Vector2f(1000.f, 1000.f));
+		// test.setFillColor(sf::Color(255, 0, 0, 90));
 	}
 
 	#pragma endregion 
@@ -157,6 +164,8 @@ public:
 		UpdateIsTalking(wizard);
 
 		// and than draw tham
+		//Priority Test
+		//window.draw(test);
 		window.draw(sprite);
 		window.draw(plate);
 	}
