@@ -1,10 +1,14 @@
-VNTU | Fundamentals of programming(FP) Labs 
+# ABOUT
 
--UKR-
-Цей репозиторій був створений для того, щоб зберігати мої
-лабораторні роботи з Основ Програмуваня(ОП) протягом мого навчання у Вінницькому
+**-UKR-**
+
+Цей репозиторій був створений для того, щоб зберігати всі мої \
+лабораторні роботи з протягом мого навчання у Вінницькому \
 Національному Технічному Університеті.
 
--ENG-
-This repository was created to store my labs on Fundamentals of Programming(FP)
-during my studying at the Vinnytsia National Technical University.
+**-ENG-**
+
+This repository was created to store all mine \
+laboratory works during my studies in Vinnytsia \
+National Technical University.
+
